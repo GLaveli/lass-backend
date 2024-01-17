@@ -1,0 +1,30 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Column {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  lines Line[]
+}
+
+model Line {
+  id          Int          @id @default(autoincrement())
+  columnId    Int
+  name        String
+  partNumbers PartNumber[]
+  column      Column       @relation(fields: [columnId], references: [id])
+}
+
+model PartNumber {
+  id          Int    @id @default(autoincrement())
+  partnumber  String @unique
+  description String
+  lineId      Int
+  line        Line   @relation(fields: [lineId], references: [id])
+}
